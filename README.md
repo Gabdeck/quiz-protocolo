@@ -1,0 +1,109 @@
+# Diagnóstico de Evolução
+
+Funil completo do **Protocolo da Evolução**: introdução, quiz de 12 perguntas, três telas de conscientização, processamento, resultado personalizado, landing integrada e redirecionamento seguro ao checkout.
+
+## Stack
+
+- Next.js App Router via vinext, React 19 e TypeScript estrito
+- Tailwind CSS 4 para pipeline de estilos; design próprio em `app/globals.css`
+- Persistência local versionada, sem dados pessoais sensíveis
+- Analytics desacoplado, compatível com `dataLayer` e Meta Pixel quando presentes
+- Vitest para domínio e Node Test para renderização do build
+- Build ESM compatível com Cloudflare Workers/Sites
+
+## Rotas
+
+- `/` — introdução do diagnóstico
+- `/diagnostico` — perguntas, conscientizações e personalização
+- `/resultado` — processamento e análise personalizada; `noindex`
+- `/oferta` — landing completa, ofertas e checkout
+- `/privacidade`, `/termos`, `/contato` — placeholders claramente marcados
+
+## Estrutura principal
+
+```text
+app/                         rotas, metadados e estilos globais
+src/components/quiz/         introdução e fluxo do diagnóstico
+src/components/results/      processamento e resultado
+src/components/landing/      landing, mockups e checkout
+src/content/                 perguntas, textos e produtos
+src/domain/quiz/             tipos, pontuação e personalização
+src/lib/analytics/           eventos do funil
+src/lib/storage/             sessão local versionada e UTMs
+src/lib/validation/          validação e montagem de checkout
+tests/                       testes unitários e de renderização
+```
+
+## Uso local
+
+Requer Node.js `>=22.13.0`.
+
+```bash
+npm install
+copy .env.example .env.local
+npm run dev
+```
+
+Validação completa:
+
+```bash
+npm run typecheck
+npm run lint
+npm test
+```
+
+## Variáveis de ambiente
+
+Copie `.env.example` para `.env.local`. Nenhum segredo deve usar prefixo `NEXT_PUBLIC_`; estas variáveis são públicas por definição.
+
+- `NEXT_PUBLIC_SITE_URL`: URL canônica do site
+- `NEXT_PUBLIC_CHECKOUT_PROTOCOL_URL`: checkout do Protocolo completo
+- `NEXT_PUBLIC_CHECKOUT_LIFE_IN_ORDER_URL`: checkout do Plano Vida em Ordem
+- `NEXT_PUBLIC_CHECKOUT_ANTI_PROCRASTINATION_URL`: checkout do Plano Antiprocrastinação
+- `NEXT_PUBLIC_CHECKOUT_GOALS_EXECUTION_URL`: checkout do Plano Execução de Metas
+- `NEXT_PUBLIC_CHECKOUT_DISCIPLINE_21_URL`: checkout do Plano 21 Dias de Disciplina
+- `NEXT_PUBLIC_CHECKOUT_EVOLUTION_30_URL`: checkout do Plano 30 Dias de Evolução
+- `NEXT_PUBLIC_GA_ID`, `NEXT_PUBLIC_META_PIXEL_ID`: identificadores opcionais de analytics
+- `NEXT_PUBLIC_PRIVACY_URL`, `NEXT_PUBLIC_TERMS_URL`, `NEXT_PUBLIC_CONTACT_URL`: destinos legais reais
+
+Sem URL válida, botões exibem aviso claro e nunca enviam o visitante para `#`. UTMs permitidas (`utm_*`, `ref`, `manychat`) são adicionadas ao checkout.
+
+## Edição de conteúdo
+
+- Perguntas e alternativas: `src/content/quiz.ts`. Pontuação continua explícita em cada alternativa.
+- Faixas, cálculo e desempate: `src/domain/quiz/scoring.ts`. Desempate: disciplina, execução, organização, direção.
+- Textos personalizados: `src/domain/quiz/personalization.ts`.
+- Planos e preços: `src/content/products.ts`.
+- FAQ, seções ativas e prova social: `src/content/landing.ts`.
+
+Para ativar depoimentos reais, altere `socialProofMode` para `testimonials` e preencha `testimonials` somente com consentimento registrado externamente. Enquanto vazio, a landing usa prévias do produto.
+
+Mockups atuais são componentes CSS em `src/components/landing/PlanMockup.tsx`. Substitua por imagens reais otimizadas quando as capas finais existirem. A imagem social fica em `public/og.png`.
+
+## Sessão e privacidade
+
+A chave `protocolo-evolucao:session:v1` armazena respostas, etapa, resultado, horário aproximado e UTMs no dispositivo. Nenhum nome, e-mail, telefone ou dado de saúde é solicitado. Para limpar manualmente:
+
+```js
+localStorage.removeItem("protocolo-evolucao:session:v1")
+```
+
+O botão “Reiniciar análise” faz a mesma limpeza. Sessões inválidas ou de outra versão voltam ao estado inicial.
+
+## Analytics
+
+Eventos: `diagnostic_view`, `diagnostic_started`, `question_answered`, `awareness_viewed`, `diagnostic_completed`, `result_viewed`, `offer_viewed`, `cta_clicked`, `individual_plan_clicked`, `checkout_redirected` e `diagnostic_restarted`.
+
+Somente dados operacionais são emitidos: ID/índice, pilar, pontuação, etapa, faixa, produto, CTA, UTMs e timestamp. Respostas completas não são enviadas. Falhas de analytics nunca bloqueiam o checkout.
+
+## Publicação
+
+O projeto usa o plugin `sites()` do starter e `.openai/hosting.json`. Execute `npm run build` antes de publicar com Sites. Configure URLs reais de checkout, domínio e links legais no ambiente hospedado.
+
+## Decisões técnicas
+
+- Conteúdo, domínio e interface separados para evitar regras duplicadas.
+- Barra dos pilares representa estabilidade: `((9 - dificuldade) / 9) * 100`.
+- Resultado é educativo, sem alegação clínica ou científica.
+- Sem escassez, contadores, depoimentos ou estatísticas inventadas.
+- CTA mobile aparece só após a primeira dobra e pode ser fechado.
