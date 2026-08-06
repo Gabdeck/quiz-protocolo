@@ -11,12 +11,13 @@
     "start": "vinext start",
     "typecheck": "tsc --noEmit",
     "test": "npm run test:unit && npm run build && node --test tests/rendered-html.test.mjs",
-    "test:unit": "tsx --test tests/scoring.test.ts",
+    "test:unit": "tsx --test tests/scoring.test.ts tests/navigation.test.ts",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "db:generate": "drizzle-kit generate"
   },
   "dependencies": {
     "drizzle-orm": "0.45.2",
+    "lucide-react": "^1.29.0",
     "next": "16.2.6",
     "react": "19.2.6",
     "react-dom": "19.2.6"
@@ -34,10 +35,10 @@
     "eslint-config-next": "16.2.6",
     "react-server-dom-webpack": "19.2.6",
     "tailwindcss": "4.2.1",
+    "tsx": "4.22.1",
     "typescript": "5.9.3",
     "vinext": "0.0.50",
     "vite": "8.0.13",
-    "tsx": "4.22.1",
     "wrangler": "4.92.0"
   },
   "type": "module"

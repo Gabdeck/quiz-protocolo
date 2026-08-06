@@ -1,4 +1,4 @@
-export type FunnelEvent = "diagnostic_view" | "diagnostic_started" | "question_answered" | "awareness_viewed" | "diagnostic_completed" | "result_viewed" | "offer_viewed" | "cta_clicked" | "individual_plan_clicked" | "checkout_redirected" | "diagnostic_restarted";
+export type FunnelEvent = "diagnostic_view" | "diagnostic_started" | "question_answered" | "question_viewed" | "answer_selected" | "question_auto_advanced" | "back_used" | "answer_changed" | "restart_confirmed" | "awareness_viewed" | "diagnostic_completed" | "result_viewed" | "offer_viewed" | "cta_clicked" | "individual_plan_clicked" | "checkout_redirected" | "diagnostic_restarted";
 
 export function track(event: FunnelEvent, data: Record<string, unknown> = {}) {
   if (typeof window === "undefined") return;

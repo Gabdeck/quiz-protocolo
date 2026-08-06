@@ -4,10 +4,15 @@ export type Score = 0 | 1 | 2 | 3;
 
 export type QuizOption = { id: string; label: string; score: Score };
 
+export type QuizIcon = "calendar" | "list" | "layers" | "zap" | "search" | "refresh" | "shield" | "undo" | "repeat" | "flag" | "idea" | "hourglass";
+
 export type QuizQuestion = {
   id: string;
   pillar: Pillar;
   title: string;
+  mobileTitle: string;
+  icon: QuizIcon;
+  interaction: "single-auto";
   options: QuizOption[];
 };
 
