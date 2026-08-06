@@ -28,4 +28,6 @@ test("server-renders the integrated offer", async () => {
   assert.match(html, /R\$27,00/);
   assert.match(html, /Vida em Ordem/);
   assert.match(html, /7 dias/);
+  assert.doesNotMatch(html, /Kit de Execução|Biblioteca Complementar|ESCOLHER ESTE PLANO/);
+  assert.equal((html.match(/QUERO O PROTOCOLO COMPLETO/g) ?? []).length, 2);
 });

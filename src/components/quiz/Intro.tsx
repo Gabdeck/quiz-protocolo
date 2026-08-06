@@ -34,6 +34,6 @@ export function Intro() {
         <p>Uma leitura clara do seu momento atual, sem respostas certas ou erradas.</p>
       </aside>
     </section>
-    <div className="intro-notice"><span>ANTES DE COMEÇAR</span><p>Responda considerando como você realmente tem vivido nas últimas semanas — e não como gostaria de estar vivendo.</p></div>
+    <div className="intro-notice"><span>ANTES DE COMEÇAR</span><p>Responda considerando como você realmente tem vivido nas últimas semanas, não como gostaria de estar vivendo.</p></div>
   </main>;
 }

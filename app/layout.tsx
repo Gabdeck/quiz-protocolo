@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   description: "Analise sua rotina, execução, disciplina e metas e descubra qual pilar mais interfere na sua evolução atual.",
   alternates: { canonical: "/" },
   icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
-  openGraph: { type: "website", locale: "pt_BR", title: "Diagnóstico de Evolução", description: "Descubra qual pilar mais interfere na sua evolução atual.", images: [{ url: "/og.png", width: 1200, height: 630, alt: "Diagnóstico de Evolução — clareza para seu próximo passo" }] },
+  openGraph: { type: "website", locale: "pt_BR", title: "Diagnóstico de Evolução", description: "Descubra qual pilar mais interfere na sua evolução atual.", images: [{ url: "/og.png", width: 1730, height: 909, alt: "Diagnóstico de Evolução: clareza para seu próximo passo" }] },
   twitter: { card: "summary_large_image", title: "Diagnóstico de Evolução", description: "Descubra qual pilar mais interfere na sua evolução atual.", images: ["/og.png"] },
   robots: { index: true, follow: true },
 };

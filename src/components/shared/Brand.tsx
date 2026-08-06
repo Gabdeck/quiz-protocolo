@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export function Brand() {
-  return <Link href="/" className="brand" aria-label="Protocolo da Evolução — início"><span className="brand-mark">P</span><span>PROTOCOLO <i>DA EVOLUÇÃO</i></span></Link>;
+  return <Link href="/" className="brand" aria-label="Protocolo da Evolução, início"><span className="brand-mark">P</span><span>PROTOCOLO <i>DA EVOLUÇÃO</i></span></Link>;
 }
 
 export function Footer() {

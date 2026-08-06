@@ -3,15 +3,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  ArrowLeft, ArrowRight, CalendarCheck2, Check, Flag, Hourglass,
-  Layers3, Lightbulb, ListChecks, RefreshCcw, Repeat2, RotateCcw,
-  Search, ShieldCheck, Undo2, Zap,
-  type LucideIcon,
+  ArrowLeft, ArrowRight, Check, RotateCcw,
 } from "lucide-react";
 import { awarenessCards, identificationOptions, mainPainOptions, pillarLabels, quizQuestions } from "@/src/content/quiz";
 import { calculateResult } from "@/src/domain/quiz/scoring";
 import { advanceIfCurrent, persistAnswer } from "@/src/domain/quiz/navigation";
-import type { Pillar, QuizIcon, QuizSession } from "@/src/domain/quiz/types";
+import type { Pillar, QuizSession } from "@/src/domain/quiz/types";
 import { track } from "@/src/lib/analytics";
 import { emptySession, loadSession, resetSession, saveSession } from "@/src/lib/storage/session";
 
@@ -27,12 +24,6 @@ export const quizSteps: Step[] = [
   { type: "question", questionIndex: 6 }, { type: "question", questionIndex: 7 }, { type: "question", questionIndex: 8 }, { type: "awareness", kind: "discipline" },
   { type: "question", questionIndex: 9 }, { type: "question", questionIndex: 10 }, { type: "question", questionIndex: 11 }, { type: "pain" }, { type: "urgency" },
 ];
-
-const icons: Record<QuizIcon, LucideIcon> = {
-  calendar: CalendarCheck2, list: ListChecks, layers: Layers3, zap: Zap,
-  search: Search, refresh: RefreshCcw, shield: ShieldCheck, undo: Undo2,
-  repeat: Repeat2, flag: Flag, idea: Lightbulb, hourglass: Hourglass,
-};
 
 const pillars: Pillar[] = ["organization", "execution", "discipline", "direction"];
 
@@ -182,12 +173,22 @@ export function QuizFlow() {
   if (!ready) return <main className="quiz-shell"><div className="loading-line" aria-label="Carregando diagnóstico" /></main>;
 
   const segmentProgress = pillars.map((pillar) => quizQuestions.filter((q) => q.pillar === pillar && session.answers[q.id]).length);
+  const currentQuestionIndex = step.type === "question" ? step.questionIndex : undefined;
+  const currentQuestion = currentQuestionIndex === undefined ? undefined : quizQuestions[currentQuestionIndex];
+  const progressLabel = currentQuestion
+    ? `${pillarLabels[currentQuestion.pillar]} · Pergunta ${currentQuestionIndex! + 1} de 12`
+    : step.type === "awareness"
+      ? `${pillarLabels[step.kind]} · Pausa de clareza`
+      : "Síntese · Etapa final";
 
   return <main className="quiz-shell">
     <header className="quiz-topbar">
       <button type="button" className="quiz-icon-button" onClick={goBack} disabled={session.currentStep === 0} aria-label="Voltar"><ArrowLeft size={20} /></button>
-      <div className="pillar-progress" aria-label={`${Object.keys(session.answers).length} de 12 perguntas respondidas`}>
-        {segmentProgress.map((count, index) => <span key={pillars[index]} aria-label={`${pillarLabels[pillars[index]]}: ${count} de 3`}><i style={{ width: `${(count / 3) * 100}%` }} /></span>)}
+      <div className="quiz-progress-center">
+        <span className="quiz-progress-label">{progressLabel}</span>
+        <div className="pillar-progress" aria-label={`${Object.keys(session.answers).length} de 12 perguntas respondidas`}>
+          {segmentProgress.map((count, index) => <span className={currentQuestion?.pillar === pillars[index] ? "current" : ""} key={pillars[index]} aria-label={`${pillarLabels[pillars[index]]}: ${count} de 3`}><i style={{ width: `${(count / 3) * 100}%` }} /></span>)}
+        </div>
       </div>
       <button type="button" className="quiz-icon-button" onClick={() => setConfirmRestart(true)} aria-label="Reiniciar diagnóstico"><RotateCcw size={18} /></button>
     </header>
@@ -208,7 +209,6 @@ export function QuizFlow() {
 
 const QuestionStep = function QuestionStep({ index, selected, onSelect, reviewing, onResume, busy, ref }: { index: number; selected?: string; onSelect: (index: number, id: string) => void; reviewing: boolean; onResume: () => void; busy: boolean; ref: React.Ref<HTMLHeadingElement> }) {
   const q = quizQuestions[index];
-  const Icon = icons[q.icon];
   const optionRefs = useRef<Array<HTMLButtonElement | null>>([]);
 
   useEffect(() => {
@@ -230,9 +230,8 @@ const QuestionStep = function QuestionStep({ index, selected, onSelect, reviewin
   }, [index, onSelect, q.options]);
 
   return <div className="question-panel animate-in">
-    <div className="question-kicker"><span>{pillarLabels[q.pillar]}</span><b>{index + 1} / 12</b></div>
     <h1 ref={ref} tabIndex={-1}><span className="mobile-question-title">{q.mobileTitle}</span><span className="desktop-question-title">{q.title}</span></h1>
-    <div className="options" role="radiogroup" aria-label={q.mobileTitle}>{q.options.map((option, optionIndex) => <button ref={(node) => { optionRefs.current[optionIndex] = node; }} type="button" role="radio" aria-checked={selected === option.id} className={`option ${selected === option.id ? "selected" : ""}`} key={option.id} onClick={() => onSelect(index, option.id)} disabled={busy}><span className="option-icon"><Icon size={19} strokeWidth={1.7} /></span><span>{option.label}</span><i aria-hidden>{selected === option.id && <Check size={18} />}</i></button>)}</div>
+    <div className="options" role="radiogroup" aria-label={q.mobileTitle}>{q.options.map((option, optionIndex) => <button ref={(node) => { optionRefs.current[optionIndex] = node; }} type="button" role="radio" aria-checked={selected === option.id} className={`option ${selected === option.id ? "selected" : ""}`} key={option.id} onClick={() => onSelect(index, option.id)} disabled={busy}><span className="option-number" aria-hidden>{optionIndex + 1}</span><span>{option.label}</span><i aria-hidden>{selected === option.id && <Check size={18} />}</i></button>)}</div>
     {reviewing && <button className="review-next" disabled={!selected || busy} onClick={onResume}>PRÓXIMA <ArrowRight size={16} /></button>}
   </div>;
 };
@@ -258,5 +257,5 @@ function AuxOptions({ options, selected, onSelect, busy }: { options: { id: stri
 }
 
 const Urgency = function Urgency({ onFinish, ref }: { onFinish: () => void; ref: React.Ref<HTMLHeadingElement> }) {
-  return <div className="awareness-panel urgency animate-in"><span className="eyebrow">UMA ÚLTIMA REFLEXÃO</span><h1 ref={ref} tabIndex={-1}>O tempo sozinho não corrige um padrão.</h1><div className="quote-grid"><span>“Sempre fui desorganizado.”</span><span>“Nunca termino nada.”</span><span>“Não tenho disciplina.”</span></div><p className="transition-copy">Respostas podem indicar falta de estrutura — não falta de capacidade.</p><button className="button primary awareness-cta" onClick={onFinish}>GERAR MINHA ANÁLISE <ArrowRight size={16} /></button></div>;
+  return <div className="awareness-panel urgency animate-in"><span className="eyebrow">UMA ÚLTIMA REFLEXÃO</span><h1 ref={ref} tabIndex={-1}>O tempo sozinho não corrige um padrão.</h1><div className="quote-grid"><span>“Sempre fui desorganizado.”</span><span>“Nunca termino nada.”</span><span>“Não tenho disciplina.”</span></div><p className="transition-copy">Respostas podem indicar falta de estrutura, não falta de capacidade.</p><button className="button primary awareness-cta" onClick={onFinish}>GERAR MINHA ANÁLISE <ArrowRight size={16} /></button></div>;
 };

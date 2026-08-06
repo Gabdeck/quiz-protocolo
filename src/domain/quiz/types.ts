@@ -35,6 +35,16 @@ export type QuizResult = {
   band: ResultBand;
 };
 
+export type PersonalizedReport = {
+  summary: string;
+  primaryBlocker: string;
+  secondaryBlocker: string;
+  routineImpact: string;
+  consequences: string;
+  strengths: string;
+  initialRecommendation: string;
+};
+
 export type UtmData = Record<string, string>;
 
 export type QuizSession = {

@@ -11,7 +11,7 @@
     "start": "vinext start",
     "typecheck": "tsc --noEmit",
     "test": "npm run test:unit && npm run build && node --test tests/rendered-html.test.mjs",
-    "test:unit": "tsx --test tests/scoring.test.ts tests/navigation.test.ts",
+    "test:unit": "tsx --test tests/scoring.test.ts tests/navigation.test.ts tests/personalization.test.ts",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "db:generate": "drizzle-kit generate"
   },
