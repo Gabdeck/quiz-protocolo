@@ -1,81 +1,129 @@
-import type { PersonalizedReport, Pillar, QuizResult } from "./types";
+import type {
+  DiagnosticPillar,
+  NeedLevel,
+  OfferPersonalization,
+  PersonalizedReport,
+  QuizResult,
+  Subpattern,
+} from "./types";
 
-export const blockerCopy: Record<Pillar, string> = {
-  organization: "Sua rotina parece consumir mais energia do que deveria. O problema não é simplesmente ter tarefas demais, mas permitir que urgências e distrações ocupem o espaço das suas prioridades.",
-  execution: "Você demonstra consciência do que precisa fazer, mas existe uma distância entre decidir e começar. Quanto mais essa distância aumenta, maior se torna o peso das tarefas.",
-  discipline: "Seu maior desafio parece estar em continuar. Quando a motivação diminui ou um imprevisto interrompe sua sequência, retomar se torna mais difícil.",
-  direction: "Você pode estar investindo energia em muitas metas ou mudando de foco antes de concluir o que começou. Isso gera movimento, mas pouco progresso acumulado.",
+export const blockerLabels: Record<DiagnosticPillar, string> = {
+  organization: "Organização",
+  execution: "Execução",
+  discipline: "Continuidade",
 };
 
-export const offerSecondLine: Record<Pillar, string> = {
-  organization: "Comece recuperando o controle da rotina e proteja aquilo que realmente importa.",
-  execution: "Reduza a distância entre saber o que fazer e realmente começar.",
-  discipline: "Construa uma forma de continuar mesmo quando a motivação diminuir.",
-  direction: "Transforme objetivos soltos em prioridades e ações claras.",
+const revelationLead: Record<NeedLevel, (label: string) => string> = {
+  correction: (label) => `Seu principal ponto de resistência está na ${label}.`,
+  structuring: (label) => `O ponto que mais limita a consistência do seu progresso está na ${label}.`,
+  strengthening: (label) => `Entre as áreas avaliadas, ${label} é o ponto mais vulnerável da sua estrutura atual.`,
 };
 
-export const painCopy: Record<string, string> = {
-  delay: "Você indicou que o que mais incomoda hoje é saber o que precisa fazer e, ainda assim, continuar adiando. Suas outras respostas mostram que isso não acontece de forma isolada.",
-  consistency: "Você indicou que o que mais incomoda hoje é começar mudanças e nunca conseguir manter. Suas outras respostas mostram que isso não acontece de forma isolada.",
-  busy: "Você indicou que o que mais incomoda hoje é fazer muita coisa sem sentir avanço real. Suas outras respostas ajudam a mostrar onde sua energia está se dispersando.",
-  time: "Você indicou que o que mais incomoda hoje é perceber o tempo passando enquanto os mesmos padrões continuam. Suas respostas mostram quais áreas mais sustentam esse ciclo.",
+const explanations: Record<DiagnosticPillar, Record<NeedLevel, string>> = {
+  organization: {
+    correction: "Suas respostas mostram que demandas do momento frequentemente ocupam o espaço das prioridades, mesmo quando você sabe que precisa avançar em outra direção.",
+    structuring: "Você consegue organizar parte do dia, mas ainda perde prioridade quando novas demandas competem pela sua atenção.",
+    strengthening: "Você demonstra controle sobre a rotina, mas ele fica mais vulnerável quando várias decisões e demandas aparecem ao mesmo tempo.",
+  },
+  execution: {
+    correction: "Suas respostas mostram uma distância recorrente entre reconhecer o que importa e começar antes que a pressão aumente.",
+    structuring: "Você consegue agir em algumas situações, mas o início ainda depende demais de vontade, prazo ou desconforto acumulado.",
+    strengthening: "Você costuma transformar intenção em ação, mas esse movimento fica mais vulnerável quando a tarefa exige começar sem motivação imediata.",
+  },
+  discipline: {
+    correction: "Suas respostas mostram que interrupções pequenas frequentemente quebram a sequência e tornam cada retomada mais difícil.",
+    structuring: "Você consegue manter parte do que começa, mas ainda não possui uma forma suficientemente estável de atravessar oscilações e retomar.",
+    strengthening: "Você demonstra capacidade de continuar, mas essa base fica mais vulnerável quando o ritmo é interrompido por alguns dias.",
+  },
 };
 
-export const identificationCopy: Record<string, string> = {
-  often: "Você também relatou que o ciclo de começar, falhar e esperar um novo recomeço acontece com frequência. Isso reforça que a dificuldade está principalmente na continuidade.",
-  some: "Algumas partes do ciclo de recomeços parecem familiares para você. Existe espaço para fortalecer a continuidade antes que uma falha vire abandono.",
-  past: "Você já viveu esse ciclo e hoje consegue lidar melhor com ele. Essa base pode ajudar a fortalecer os pilares que ainda oscilam.",
-  no: "Você não se identifica com o ciclo de recomeços. Sua análise considera isso e concentra a recomendação nos demais padrões relatados.",
+const patternCopy: Record<Subpattern, string> = {
+  dispersion: "O padrão que mais apareceu foi a dispersão: o dia recebe muitas ações, mas nem sempre a prioridade recebe espaço suficiente.",
+  urgency_reactivity: "O padrão que mais apareceu foi reagir ao que chega primeiro, fazendo urgência e facilidade decidirem a ordem do dia.",
+  unclear_next_step: "O padrão que mais apareceu foi a falta de um próximo passo concreto, que mantém mudanças importantes vagas e difíceis de iniciar.",
+  postponement: "O padrão que mais apareceu foi o adiamento: a tarefa continua presente, mas o início é deslocado para um momento que parece mais favorável.",
+  escape_productivity: "O padrão que mais apareceu foi ocupar-se com outras tarefas para evitar justamente a ação que teria maior impacto.",
+  pressure_dependence: "O padrão que mais apareceu foi depender da pressão para agir, quando prazo e desconforto já tornaram a tarefa maior.",
+  loss_of_rhythm: "O padrão que mais apareceu foi perder ritmo depois de uma oscilação e encontrar dificuldade para recuperar a sequência.",
+  all_or_nothing: "O padrão que mais apareceu foi tratar uma interrupção pequena como quebra completa do plano, enfraquecendo a retomada.",
+  recurring_restart: "O padrão que mais apareceu foi o recomeço recorrente: muita energia para iniciar novamente e pouca estrutura para continuar.",
 };
 
-const pillarImpact: Record<Pillar, string> = {
-  organization: "Na rotina, isso tende a transformar prioridades em tarefas adiadas. Você reage ao que aparece, gasta energia decidindo novamente e termina dias cheios sem proteger o que realmente faria diferença.",
-  execution: "Na rotina, isso aumenta o peso mental das tarefas importantes. A intenção permanece ativa, mas o início demora, outras atividades ocupam o espaço e a pressão cresce sem produzir avanço equivalente.",
-  discipline: "Na rotina, isso faz pequenas interrupções parecerem perdas completas. Um dia difícil vira vários, a retomada exige energia demais e cada novo começo precisa reconstruir confiança.",
-  direction: "Na rotina, isso distribui esforço entre objetivos concorrentes. Novas ideias substituem prioridades antes que produzam resultado, criando movimento frequente e pouco progresso acumulado.",
+const genericPattern: Record<DiagnosticPillar, string> = {
+  organization: "Não apareceu um comportamento isolado forte. A vulnerabilidade está na forma como prioridades perdem proteção quando o dia fica mais exigente.",
+  execution: "Não apareceu um comportamento isolado forte. A vulnerabilidade está no atrito variável entre decidir e realmente começar.",
+  discipline: "Não apareceu um comportamento isolado forte. A vulnerabilidade está na retomada quando a sequência deixa de ser perfeita.",
 };
 
-const pillarConsequence: Record<Pillar, string> = {
-  organization: "Se esse padrão continuar, urgências devem seguir definindo sua agenda. Metas importantes podem permanecer em segundo plano, mesmo com esforço alto e pouco tempo livre.",
-  execution: "Se esse padrão continuar, tarefas adiadas tendem a chegar maiores, mais urgentes e emocionalmente mais pesadas. O risco não é falta de capacidade, mas perder oportunidades de aplicar o que você já sabe.",
-  discipline: "Se esse padrão continuar, planos podem depender cada vez mais de motivação e condições perfeitas. Isso reduz previsibilidade e fortalece a sensação de estar sempre começando novamente.",
-  direction: "Se esse padrão continuar, sua energia pode continuar dividida entre muitas frentes. O custo aparece em metas abertas, decisões repetidas e dificuldade para reconhecer avanço concreto.",
+const consequences: Record<DiagnosticPillar, Record<QuizResult["resistanceBand"], string>> = {
+  organization: {
+    low: "Hoje esse custo parece mais contido, mas fortalecer esse ponto reduz a dependência de dias tranquilos para proteger o que importa.",
+    moderate: "Sem uma estrutura mais clara, dias produtivos podem continuar alternando com períodos de muito esforço e pouco avanço relevante.",
+    high: "Esse funcionamento tende a manter metas importantes atrás de demandas imediatas, mesmo quando existe esforço e tempo investidos.",
+    very_high: "Se o padrão continuar, a rotina pode seguir consumindo energia enquanto mudanças importantes permanecem adiadas e a frustração aumenta.",
+  },
+  execution: {
+    low: "Hoje esse custo parece mais contido, mas fortalecer o início reduz a dependência de motivação e circunstâncias favoráveis.",
+    moderate: "Sem um mecanismo de início, tarefas importantes podem continuar ocupando espaço mental antes de finalmente receberem ação.",
+    high: "O adiamento tende a aumentar pressão e peso mental, fazendo você agir mais tarde e em condições piores.",
+    very_high: "Se o padrão continuar, pressão e urgência podem seguir sendo o gatilho principal para ações que poderiam começar de forma mais simples.",
+  },
+  discipline: {
+    low: "Hoje esse custo parece mais contido, mas fortalecer a retomada evita que seu progresso dependa de sequências sempre favoráveis.",
+    moderate: "Sem uma regra de retomada, oscilações normais podem continuar interrompendo avanços que já estavam sendo construídos.",
+    high: "Cada interrupção tende a exigir um novo esforço de começo, reduzindo o progresso acumulado ao longo do tempo.",
+    very_high: "Se o padrão continuar, novos recomeços podem consumir energia repetidamente sem criar a continuidade que seus objetivos exigem.",
+  },
 };
 
-const pillarStrength: Record<Pillar, string> = {
-  organization: "Você demonstra capacidade de ordenar prioridades e criar alguma previsibilidade. Essa base pode proteger tempo para os outros pilares.",
-  execution: "Você já consegue reduzir a distância entre decisão e ação em parte das situações. Essa prontidão pode ser usada para iniciar mudanças menores e verificáveis.",
-  discipline: "Você possui sinais de continuidade e retomada. Essa capacidade ajuda a atravessar dias imperfeitos sem transformar uma falha em abandono.",
-  direction: "Você mostra algum critério para escolher objetivos e avaliar novos caminhos. Essa clareza pode impedir que esforço seja diluído em metas concorrentes.",
+const blockerMechanism: Record<DiagnosticPillar, string> = {
+  organization: "um sistema simples de priorização, proteção de atenção e próximos passos concretos",
+  execution: "uma forma de transformar intenção em ação sem esperar vontade, pressão ou urgência",
+  discipline: "uma estrutura de constância e retomada que continue funcionando depois de interrupções",
 };
 
-const recommendation: Record<Pillar, string> = {
-  organization: "Comece definindo uma prioridade diária e um limite claro para urgências. Seu primeiro ganho virá de proteger espaço, não de acrescentar mais tarefas.",
-  execution: "Comece reduzindo cada prioridade à menor ação executável e marque um momento concreto para iniciá-la. Seu primeiro ganho virá de diminuir atrito, não de esperar mais motivação.",
-  discipline: "Comece escolhendo um compromisso pequeno, com versão mínima para dias difíceis e regra de retomada para o dia seguinte. Seu primeiro ganho virá de continuar de forma imperfeita.",
-  direction: "Comece elegendo um objetivo principal para o ciclo atual e registrando o que ficará conscientemente de fora. Seu primeiro ganho virá de concluir antes de expandir.",
+const bridgeCopy: Record<DiagnosticPillar, string> = {
+  organization: "O Protocolo da Evolução transforma prioridades em decisões práticas que continuam protegidas quando o dia muda.",
+  execution: "O Protocolo da Evolução encurta a distância entre decidir e começar com ações que cabem no dia real.",
+  discipline: "O Protocolo da Evolução cria uma forma simples de continuar e retomar sem depender de uma sequência perfeita.",
 };
 
-const severityLead = (score: number) => {
-  if (score >= 8) return "Suas respostas mostram presença forte e recorrente desse padrão.";
-  if (score >= 5) return "Suas respostas mostram que esse padrão interfere com frequência no seu progresso.";
-  return "Suas respostas indicam um ponto de atenção que ainda pode ser corrigido antes de ganhar força.";
+const secondarySentence = (result: QuizResult) => {
+  const primaryScore = result.pillarScores[result.primaryBlocker];
+  const secondaryScore = result.pillarScores[result.secondaryBlocker];
+  if (primaryScore - secondaryScore > 2 || secondaryScore < 3) return "";
+  return ` A ${blockerLabels[result.secondaryBlocker]} aparece próxima e ajuda a manter essa dificuldade.`;
 };
 
-export function buildPersonalizedReport(result: QuizResult, mainPainAnswer: string, identificationAnswer: string): PersonalizedReport {
+export function buildPersonalizedReport(result: QuizResult): PersonalizedReport {
   const primary = result.primaryBlocker;
-  const secondary = result.secondaryBlocker;
-  const strongest = result.strongestPillar;
-  const pain = painCopy[mainPainAnswer] ?? result.band.description;
-  const identification = identificationCopy[identificationAnswer] ?? "Seu padrão de continuidade foi considerado na leitura.";
-
   return {
-    summary: `${pain} ${severityLead(result.pillarScores[primary])}`,
-    primaryBlocker: `${blockerCopy[primary]} Este foi o pilar com maior dificuldade relativa na sua pontuação.`,
-    secondaryBlocker: `${blockerCopy[secondary]} Ele funciona como reforço do bloqueio principal e ajuda a explicar por que tentativas isoladas perdem força.`,
-    routineImpact: `${pillarImpact[primary]} ${identification}`,
-    consequences: `${pillarConsequence[primary]} ${pillarConsequence[secondary]}`,
-    strengths: `${pillarStrength[strongest]} Seu pilar mais estável foi ${strongest === primary ? "a própria base analisada" : "o ponto com menor dificuldade relativa"}, e ele pode servir como apoio prático para a mudança.`,
-    initialRecommendation: `${recommendation[primary]} Depois, use o segundo pilar como apoio. ${recommendation[secondary]}`,
+    revelation: revelationLead[result.needLevel](blockerLabels[primary]),
+    explanation: `${explanations[primary][result.needLevel]}${secondarySentence(result)}`,
+    pattern: result.primarySubpattern ? patternCopy[result.primarySubpattern] : genericPattern[primary],
+    consequence: consequences[primary][result.resistanceBand],
+    need: `Para mudar isso, você precisa de ${blockerMechanism[primary]}. O conjunto das suas respostas indica que esse é o mecanismo com maior potencial de destravar seu próximo avanço.`,
+    bridge: bridgeCopy[primary],
+  };
+}
+
+const landingPattern: Partial<Record<Subpattern, string>> = {
+  dispersion: "proteger prioridades antes que o dia se disperse",
+  urgency_reactivity: "tirar a urgência do comando da sua rotina",
+  unclear_next_step: "transformar mudanças vagas em próximos passos claros",
+  postponement: "encurtar a distância entre decidir e começar",
+  escape_productivity: "direcionar esforço para a ação de maior impacto",
+  pressure_dependence: "agir antes que a pressão vire o principal gatilho",
+  loss_of_rhythm: "recuperar o ritmo sem depender de uma sequência perfeita",
+  all_or_nothing: "continuar depois de dias imperfeitos",
+  recurring_restart: "sair do ciclo de recomeços e tornar a retomada mais simples",
+};
+
+export function buildOfferPersonalization(result: QuizResult): OfferPersonalization {
+  const pattern = result.primarySubpattern ? landingPattern[result.primarySubpattern] : undefined;
+  const mechanism = pattern ?? blockerMechanism[result.primaryBlocker];
+  return {
+    hero: `Seu diagnóstico mostrou onde o progresso perde força. Agora você precisa de uma estrutura para ${mechanism}.`,
+    startingPoint: `${blockerLabels[result.primaryBlocker]}: ${mechanism}.`,
   };
 }

@@ -1,7 +1,5 @@
 export const landingConfig = {
-  sections: { problem: true, plans: true, transformation: true, method: true, pricing: true, individual: true, preview: true, access: true, kit: true, guarantee: true, faq: true },
-  socialProofMode: "productPreview" as "testimonials" | "productPreview",
-  testimonials: [] as Array<{ name: string; text: string; plan: string; image?: string; consentRecorded: boolean }>,
+  testimonials: [] as Array<{ name: string; text: string; context: string; image?: string; source: string; consentRecorded: boolean }>,
 };
 
 export const painItems = [
@@ -15,9 +13,18 @@ export const painItems = [
 
 export const transformationItems = ["Mais clareza sobre o que importa", "Menos excesso de tarefas e distrações", "Menos resistência para começar", "Metas transformadas em ações", "Rotina mais organizada", "Capacidade de continuar em dias imperfeitos", "Retomada sem jogar o progresso fora", "Menos dependência de recomeços"];
 
+export const practicalBenefits = [
+  "Escolher a prioridade antes que o urgente tome conta.",
+  "Transformar uma meta em uma próxima ação executável.",
+  "Começar sem esperar motivação ou pressão.",
+  "Retomar depois de um dia ruim sem reiniciar tudo.",
+];
+
 export const faqs = [
-  ["Eu já tentei criar uma rotina antes. Por que seria diferente?", "O Protocolo não entrega uma rotina pronta. Ele organiza cinco frentes conectadas e ajuda você a construir uma estrutura compatível com sua realidade."],
-  ["Preciso seguir tudo perfeitamente?", "Não. Os Planos trabalham com ações pequenas, versões mínimas e retomada após falhas. O objetivo é continuidade, não perfeição."],
-  ["Tenho pouco tempo. Vou conseguir aplicar?", "Sim. A proposta é avançar com pequenas ações práticas, sem exigir horas de estudo ou preenchimento todos os dias."],
-  ["Como receberei o material?", "Após a confirmação do pagamento, as instruções de acesso serão enviadas ao e-mail usado na compra."],
+  ["Como receberei o acesso?", "Após a confirmação do pagamento, as instruções de acesso serão enviadas ao e-mail usado na compra."],
+  ["Qual é o formato do Protocolo?", "O Protocolo é um material digital e autoguiado, organizado em cinco Planos de aplicação."],
+  ["Quanto tempo preciso reservar?", "A proposta é aplicar pequenas ações no dia a dia, sem depender de longos períodos de estudo."],
+  ["Como funciona a garantia?", "Você tem 7 dias após a compra para conhecer o material e solicitar o reembolso dentro desse prazo."],
+  ["Existe suporte individual?", "A versão atual é autoguiada e não inclui acompanhamento individual."],
+  ["Existe mensalidade?", "Não. O pagamento é único e não existe cobrança recorrente."],
 ];

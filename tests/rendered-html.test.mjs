@@ -14,9 +14,9 @@ test("server-renders the diagnostic intro", async () => {
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
   const html = await response.text();
   assert.match(html, /Diagnóstico de Evolução/);
-  assert.match(html, /Descubra quais padrões estão/);
-  assert.match(html, /COMEÇAR MINHA ANÁLISE/);
-  assert.match(html, /Organização/);
+  assert.match(html, /Descubra o padrão que mais/);
+  assert.match(html, /COMEÇAR MEU DIAGNÓSTICO/);
+  assert.match(html, /9 perguntas/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton|Your site is taking shape/i);
 });
 
@@ -29,5 +29,6 @@ test("server-renders the integrated offer", async () => {
   assert.match(html, /Vida em Ordem/);
   assert.match(html, /7 dias/);
   assert.doesNotMatch(html, /Kit de Execução|Biblioteca Complementar|ESCOLHER ESTE PLANO/);
-  assert.equal((html.match(/QUERO O PROTOCOLO COMPLETO/g) ?? []).length, 2);
+  assert.match(html, /BENEFÍCIOS PRÁTICOS/);
+  assert.match(html, /IR PARA O CHECKOUT/);
 });
