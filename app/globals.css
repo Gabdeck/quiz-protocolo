@@ -948,3 +948,203 @@ body { background:var(--ink); color:#dce7e1; }
   html { scroll-behavior:auto; }
   *,*::before,*::after { animation-duration:.01ms!important; animation-iteration-count:1!important; scroll-behavior:auto!important; transition-duration:.01ms!important; }
 }
+
+/* Redesign v4: one continuous dark-mode funnel */
+:root { color-scheme:dark; }
+
+.report-visual,
+.offer-v3 {
+  --funnel-bg:#10211b;
+  --funnel-surface:#183128;
+  --funnel-surface-soft:#142a22;
+  --funnel-surface-raised:#1d382e;
+  --funnel-text:#f4f7f5;
+  --funnel-muted:#b8c7bf;
+  --funnel-subtle:#91a39a;
+  --funnel-border:rgba(220,231,225,.16);
+  background:var(--funnel-bg);
+  color:var(--funnel-text);
+}
+
+.report-visual .site-header,
+.offer-header-v3 {
+  border-color:var(--funnel-border);
+}
+
+.report-visual .brand-mark,
+.offer-v3 .brand-mark {
+  border-color:#55d39b;
+  color:#55d39b;
+}
+
+.report-visual .brand i,
+.offer-v3 .brand i,
+.offer-header-v3>a:not(.brand),
+.offer-hero-copy-v3 .eyebrow,
+.offer-v3 .diagnostic-continuity strong,
+.offer-problem-v3>span,
+.offer-solution-v3>header>span,
+.practical-benefits-v3 header>span,
+.pricing-copy-v3>span,
+.faq-v3 header>span,
+.module-list-v3 article>span,
+.module-list-v3 svg,
+.pricing-copy-v3 svg,
+.practical-benefits-v3 li>span,
+.report-visual-hero h1 strong,
+.report-evidence svg,
+.report-evidence strong,
+.report-pillar-card>summary>strong,
+.report-card-copy>span,
+.report-need-copy>span,
+.report-offer-bridge h2 em,
+.lead-capture-copy>span,
+.lead-success>span {
+  color:#55d39b;
+}
+
+.report-visual-hero>div>p,
+.report-evidence,
+.report-pillar-card>summary small,
+.report-card-copy p,
+.report-analysis-card p,
+.report-need-card li,
+.report-offer-bridge>p,
+.report-offer-bridge small,
+.lead-capture-copy p,
+.lead-success p,
+.lead-helper,
+.offer-hero-copy-v3>p,
+.offer-product-visual>p,
+.offer-problem-v3 p,
+.offer-solution-v3>header p,
+.pricing-copy-v3>p,
+.module-list-v3 p,
+.social-proof-list figcaption span,
+.faq-v3 details p {
+  color:var(--funnel-muted);
+}
+
+.module-list-v3 li,
+.pricing-copy-v3 li,
+.lead-skip {
+  color:#dce7e1;
+}
+
+.report-evidence,
+.report-pillar-card,
+.report-pillar-card[open]>summary,
+.report-analysis-card,
+.lead-capture,
+.offer-header-v3,
+.offer-v3 .diagnostic-continuity,
+.offer-problem-v3,
+.module-list-v3,
+.module-list-v3 article,
+.practical-benefits-v3,
+.practical-benefits-v3 li,
+.social-proof-section,
+.social-proof-list figure,
+.faq-v3,
+.faq-v3>div,
+.faq-v3 details,
+.offer-v3 .footer {
+  border-color:var(--funnel-border);
+}
+
+.report-pillar-card,
+.report-analysis-card,
+.lead-capture,
+.social-proof-list figure {
+  background:var(--funnel-surface-soft);
+}
+
+.report-consequence-card,
+.report-need-card,
+.guarantee-v3 {
+  background:var(--funnel-surface-raised);
+  border-color:var(--funnel-border);
+  color:var(--funnel-text);
+}
+
+.report-consequence-card p,
+.report-need-copy p,
+.guarantee-v3 p {
+  color:#dce7e1;
+}
+
+.report-card-icon,
+.lead-capture-icon,
+.report-need-icon {
+  background:rgba(85,211,155,.1);
+  border-color:rgba(85,211,155,.26);
+  color:#55d39b;
+}
+
+.report-score-segments i {
+  background:rgba(220,231,225,.12);
+}
+
+.report-score-segments i.filled,
+.report-pillar-list>article.is-primary .report-score-segments i.filled {
+  background:#55d39b;
+}
+
+.report-primary-tag {
+  background:rgba(85,211,155,.1);
+  border-color:rgba(85,211,155,.28);
+  color:#55d39b;
+}
+
+.lead-capture label {
+  color:var(--funnel-text);
+}
+
+.lead-field-row input {
+  background:#10211b;
+  border-color:#527064;
+  color:var(--funnel-text);
+}
+
+.lead-field-row input::placeholder {
+  color:#91a39a;
+}
+
+.lead-field-row input:focus {
+  border-color:#55d39b;
+  outline-color:rgba(85,211,155,.2);
+}
+
+.lead-error { color:#ff9c9c; }
+
+.offer-problem-v3 {
+  background:var(--funnel-surface-soft);
+}
+
+.offer-v3 .book {
+  border:1px solid var(--funnel-border);
+  box-shadow:0 18px 42px rgba(3,12,8,.3);
+}
+
+.practical-benefits-v3 li p,
+.social-proof-list blockquote {
+  color:#dce7e1;
+}
+
+.guarantee-v3>div>span,
+.price-card-v3>span,
+.report-consequence-card h2 {
+  color:#55d39b;
+}
+
+.price-card-v3 {
+  background:var(--funnel-surface-raised);
+  border:1px solid var(--funnel-border);
+}
+
+.price-card-v3>p,
+.price-card-v3>small {
+  color:var(--funnel-muted);
+}
+
+.faq-v3 summary span { color:#55d39b; }
