@@ -19,16 +19,3 @@ test("server-renders the diagnostic intro", async () => {
   assert.match(html, /9 perguntas/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton|Your site is taking shape/i);
 });
-
-test("server-renders the integrated offer", async () => {
-  const response = await render("/oferta");
-  assert.equal(response.status, 200);
-  const html = await response.text();
-  assert.match(html, /Protocolo da Evolução/);
-  assert.match(html, /R\$27,00/);
-  assert.match(html, /Vida em Ordem/);
-  assert.match(html, /7 dias/);
-  assert.doesNotMatch(html, /Kit de Execução|Biblioteca Complementar|ESCOLHER ESTE PLANO/);
-  assert.match(html, /BENEFÍCIOS PRÁTICOS/);
-  assert.match(html, /IR PARA O CHECKOUT/);
-});

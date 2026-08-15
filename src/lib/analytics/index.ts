@@ -1,4 +1,4 @@
-export type FunnelEvent = "diagnostic_view" | "diagnostic_started" | "question_answered" | "question_viewed" | "answer_selected" | "question_auto_advanced" | "back_used" | "answer_changed" | "restart_confirmed" | "awareness_viewed" | "diagnostic_completed" | "result_viewed" | "offer_viewed" | "cta_clicked" | "individual_plan_clicked" | "checkout_redirected" | "diagnostic_restarted" | "lead_form_viewed" | "lead_submitted" | "lead_captured" | "lead_capture_failed" | "lead_capture_skipped";
+export type FunnelEvent = "diagnostic_view" | "diagnostic_started" | "question_answered" | "question_viewed" | "answer_selected" | "question_auto_advanced" | "back_used" | "answer_changed" | "restart_confirmed" | "awareness_viewed" | "diagnostic_completed" | "result_viewed" | "cta_clicked" | "diagnostic_restarted" | "lead_form_viewed" | "lead_submitted" | "lead_captured" | "lead_capture_failed" | "lead_capture_skipped";
 
 export const FUNNEL_VERSION = 3;
 export const QUIZ_VERSION = 3;

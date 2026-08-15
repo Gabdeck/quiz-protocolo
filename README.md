@@ -1,6 +1,6 @@
 # Diagnóstico de Evolução
 
-Funil completo do **Protocolo da Evolução**: introdução, quiz de 9 perguntas, duas pausas de clareza, processamento, resultado personalizado, captura opcional de lead, landing integrada e redirecionamento seguro ao checkout.
+Funil do **Protocolo da Evolução**: introdução, quiz de 9 perguntas, duas pausas de clareza, processamento, resultado personalizado, captura opcional de lead e redirecionamento para uma landing externa.
 
 ## Stack
 
@@ -16,7 +16,6 @@ Funil completo do **Protocolo da Evolução**: introdução, quiz de 9 perguntas
 - `/` — introdução do diagnóstico
 - `/diagnostico` — perguntas, conscientizações e personalização
 - `/resultado` — processamento e análise personalizada; `noindex`
-- `/oferta` — landing completa, ofertas e checkout
 - `/privacidade`, `/termos`, `/contato` — placeholders claramente marcados
 
 ## Estrutura principal
@@ -25,12 +24,11 @@ Funil completo do **Protocolo da Evolução**: introdução, quiz de 9 perguntas
 app/                         rotas, metadados e estilos globais
 src/components/quiz/         introdução e fluxo do diagnóstico
 src/components/results/      processamento e resultado
-src/components/landing/      landing, mockups e checkout
 src/content/                 perguntas, textos e produtos
 src/domain/quiz/             tipos, pontuação e personalização
 src/lib/analytics/           eventos do funil
 src/lib/storage/             sessão local versionada e UTMs
-src/lib/validation/          validação e montagem de checkout
+src/lib/validation/          validação da URL da landing externa
 tests/                       testes unitários e de renderização
 ```
 
@@ -57,28 +55,18 @@ npm test
 Copie `.env.example` para `.env.local`. Nenhum segredo deve usar prefixo `NEXT_PUBLIC_`; estas variáveis são públicas por definição.
 
 - `NEXT_PUBLIC_SITE_URL`: URL canônica do site
-- `NEXT_PUBLIC_CHECKOUT_PROTOCOL_URL`: checkout do Protocolo completo
-- `NEXT_PUBLIC_CHECKOUT_LIFE_IN_ORDER_URL`: checkout do Plano Vida em Ordem
-- `NEXT_PUBLIC_CHECKOUT_ANTI_PROCRASTINATION_URL`: checkout do Plano Antiprocrastinação
-- `NEXT_PUBLIC_CHECKOUT_GOALS_EXECUTION_URL`: checkout do Plano Execução de Metas
-- `NEXT_PUBLIC_CHECKOUT_DISCIPLINE_21_URL`: checkout do Plano 21 Dias de Disciplina
-- `NEXT_PUBLIC_CHECKOUT_EVOLUTION_30_URL`: checkout do Plano 30 Dias de Evolução
+- `NEXT_PUBLIC_LANDING_PAGE_URL`: URL completa da landing externa aberta após o diagnóstico
 - `NEXT_PUBLIC_GA_ID`, `NEXT_PUBLIC_META_PIXEL_ID`: identificadores opcionais de analytics
 - `NEXT_PUBLIC_PRIVACY_URL`, `NEXT_PUBLIC_TERMS_URL`, `NEXT_PUBLIC_CONTACT_URL`: destinos legais reais
 
-Sem URL válida, botões exibem aviso claro e nunca enviam o visitante para `#`. UTMs permitidas (`utm_*`, `ref`, `manychat`) são adicionadas ao checkout.
+Sem uma URL válida, o resultado exibe um aviso claro e nunca envia o visitante para `#`. UTMs permitidas (`utm_*`, `ref`, `manychat`) são adicionadas à landing externa.
 
 ## Edição de conteúdo
 
 - Perguntas e alternativas: `src/content/quiz.ts`. Pontuação continua explícita em cada alternativa.
 - Faixas, cálculo e desempate: `src/domain/quiz/scoring.ts`. Desempate: disciplina, execução, organização, direção.
 - Textos personalizados: `src/domain/quiz/personalization.ts`.
-- Planos e preços: `src/content/products.ts`.
-- FAQ, seções ativas e prova social: `src/content/landing.ts`.
-
-Para ativar depoimentos reais, preencha `landingConfig.testimonials` somente com conteúdo verificável e consentimento registrado. Enquanto a lista estiver vazia, a seção de prova social não é renderizada.
-
-Mockups atuais são componentes CSS em `src/components/landing/PlanMockup.tsx`. Substitua por imagens reais otimizadas quando as capas finais existirem. A imagem social fica em `public/og.png`.
+A imagem social do diagnóstico fica em `public/og.png`.
 
 ## Sessão e privacidade
 
@@ -92,13 +80,13 @@ O botão “Reiniciar análise” faz a mesma limpeza. Sessões inválidas ou de
 
 ## Analytics
 
-Eventos: `diagnostic_view`, `diagnostic_started`, `question_answered`, `awareness_viewed`, `diagnostic_completed`, `result_viewed`, `offer_viewed`, `cta_clicked`, `individual_plan_clicked`, `checkout_redirected` e `diagnostic_restarted`.
+Eventos: `diagnostic_view`, `diagnostic_started`, `question_answered`, `awareness_viewed`, `diagnostic_completed`, `result_viewed`, `cta_clicked` e `diagnostic_restarted`.
 
-Somente dados operacionais são emitidos: ID/índice, pilar, pontuação, etapa, faixa, produto, CTA, UTMs e timestamp. Respostas completas não são enviadas. Falhas de analytics nunca bloqueiam o checkout.
+Somente dados operacionais são emitidos: ID/índice, pilar, pontuação, etapa, faixa, CTA, UTMs e timestamp. Respostas completas não são enviadas. Falhas de analytics nunca bloqueiam o redirecionamento.
 
 ## Publicação
 
-O projeto usa o plugin `sites()` do starter e `.openai/hosting.json`. Execute `npm run build` antes de publicar com Sites. Configure URLs reais de checkout, domínio e links legais no ambiente hospedado.
+O projeto usa o plugin `sites()` do starter e `.openai/hosting.json`. Execute `npm run build` antes de publicar com Sites. Configure a URL da landing externa, o domínio e os links legais no ambiente hospedado.
 
 ## Decisões técnicas
 
