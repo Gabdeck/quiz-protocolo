@@ -5,7 +5,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { ArrowRight, Check, Mail } from "lucide-react";
 import type { QuizSession } from "@/src/domain/quiz/types";
 import { track } from "@/src/lib/analytics";
-import { buildLandingPageUrl } from "@/src/lib/validation/landing";
+import { buildLandingRedirectPath } from "@/src/lib/validation/landing";
 
 export function LeadCapture({ session }: { session: QuizSession }) {
   const [email, setEmail] = useState("");
@@ -13,7 +13,7 @@ export function LeadCapture({ session }: { session: QuizSession }) {
   const [status, setStatus] = useState<"idle" | "saving" | "saved" | "skipped" | "error">("idle");
   const result = session.result!;
   const canContinue = status === "saved" || status === "skipped";
-  const landingPageUrl = buildLandingPageUrl(session.utms);
+  const landingPageUrl = buildLandingRedirectPath(session.utms);
 
   useEffect(() => {
     track("lead_form_viewed", { primaryBlocker: result.primaryBlocker });
@@ -75,9 +75,9 @@ export function LeadCapture({ session }: { session: QuizSession }) {
       {status === "saved" && <span><Check size={18} /> Diagnóstico salvo</span>}
       <h2 id="lead-capture-title">Sua recomendação já está pronta.</h2>
       <p>Veja como transformar o ponto identificado em uma estrutura prática para o dia a dia.</p>
-      {landingPageUrl ? <a href={landingPageUrl} className="button primary button-large" onClick={() => track("cta_clicked", { ctaLabel: "Ver minha recomendação", ctaLocation: "result_lead_capture", primaryBlocker: result.primaryBlocker })}>
+      <a href={landingPageUrl} className="button primary button-large" onClick={() => track("cta_clicked", { ctaLabel: "Ver minha recomendação", ctaLocation: "result_lead_capture", primaryBlocker: result.primaryBlocker })}>
         VER MINHA RECOMENDAÇÃO <ArrowRight size={17} />
-      </a> : <p className="lead-error" role="alert">A página de recomendação ainda não foi configurada.</p>}
+      </a>
     </div>}
   </section>;
 }

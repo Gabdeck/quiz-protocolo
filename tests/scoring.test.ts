@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { quizQuestions } from "../src/content/quiz.ts";
 import { calculateResult, classifySubpattern, getNeedLevel, getResistanceBand } from "../src/domain/quiz/scoring.ts";
-import { buildConfiguredLandingPageUrl, buildLandingPageUrl, isValidLandingPageUrl } from "../src/lib/validation/landing.ts";
+import { buildConfiguredLandingPageUrl, buildLandingRedirectPath, isValidLandingPageUrl } from "../src/lib/validation/landing.ts";
 import { captureTracking, migrateLegacySession, parseSession } from "../src/lib/storage/session.ts";
 
 const answersAt = (index: number) => Object.fromEntries(quizQuestions.map((question) => [question.id, question.options[index].id]));
@@ -71,7 +71,7 @@ test("calibra níveis internos pela força dos pilares", () => {
 test("recusa resposta ausente", () => assert.throws(() => calculateResult({}), /p1/));
 test("aceita somente parâmetros permitidos", () => assert.deepEqual(captureTracking("?utm_source=instagram&email=x%40x.com&manychat=abc"), { utm_source: "instagram", manychat: "abc" }));
 test("valida URLs seguras da landing", () => { assert.equal(isValidLandingPageUrl("https://landing.example.com/x"), true); assert.equal(isValidLandingPageUrl("javascript:alert(1)"), false); });
-test("retorna null quando a landing não foi configurada", () => assert.equal(buildLandingPageUrl({ utm_source: "instagram" }), null));
+test("monta o redirecionamento interno para a landing", () => assert.equal(buildLandingRedirectPath({ utm_source: "instagram" }), "/continuar?utm_source=instagram"));
 test("propaga UTMs para a landing configurada", () => assert.equal(buildConfiguredLandingPageUrl("https://landing.example.com/oferta?origem=quiz", { utm_source: "instagram", manychat: "abc" }), "https://landing.example.com/oferta?origem=quiz&utm_source=instagram&manychat=abc"));
 test("restaura v3 e migra somente rastreamento de versões antigas", () => {
   assert.equal(parseSession(JSON.stringify({ version: 3, answers: { p1: "p1-2" }, currentStep: 4, utms: {} })).currentStep, 4);

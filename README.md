@@ -24,7 +24,7 @@ Funil do **Protocolo da Evolução**: introdução, quiz de 9 perguntas, duas pa
 app/                         rotas, metadados e estilos globais
 src/components/quiz/         introdução e fluxo do diagnóstico
 src/components/results/      processamento e resultado
-src/content/                 perguntas, textos e produtos
+src/content/                 perguntas e textos do diagnóstico
 src/domain/quiz/             tipos, pontuação e personalização
 src/lib/analytics/           eventos do funil
 src/lib/storage/             sessão local versionada e UTMs
@@ -55,7 +55,7 @@ npm test
 Copie `.env.example` para `.env.local`. Nenhum segredo deve usar prefixo `NEXT_PUBLIC_`; estas variáveis são públicas por definição.
 
 - `NEXT_PUBLIC_SITE_URL`: URL canônica do site
-- `NEXT_PUBLIC_LANDING_PAGE_URL`: URL completa da landing externa aberta após o diagnóstico
+- `LANDING_PAGE_URL`: URL completa da landing externa aberta após o diagnóstico
 - `NEXT_PUBLIC_GA_ID`, `NEXT_PUBLIC_META_PIXEL_ID`: identificadores opcionais de analytics
 - `NEXT_PUBLIC_PRIVACY_URL`, `NEXT_PUBLIC_TERMS_URL`, `NEXT_PUBLIC_CONTACT_URL`: destinos legais reais
 
