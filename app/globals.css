@@ -796,10 +796,10 @@ body { background:var(--ink); color:#dce7e1; }
 .lead-capture-copy p,.lead-success p { color:#56645d; margin:0; }
 .lead-capture form { align-self:center; }
 .lead-capture label { color:#15221c; display:block; font-size:.78rem; font-weight:700; margin-bottom:8px; }
-.lead-field-row { display:grid; gap:8px; grid-template-columns:minmax(0,1fr) auto; }
-.lead-field-row input { background:#f4f7f5; border:1px solid #9eada5; border-radius:var(--radius-control); color:#15221c; font:inherit; min-height:52px; min-width:0; padding:0 14px; }
-.lead-field-row input::placeholder { color:#68766f; }
-.lead-field-row input:focus { border-color:#137a57; outline:3px solid rgba(19,122,87,.2); }
+.lead-fields { display:grid; gap:10px; }
+.lead-fields input { background:#f4f7f5; border:1px solid #9eada5; border-radius:var(--radius-control); color:#15221c; font:inherit; min-height:52px; min-width:0; padding:0 14px; width:100%; }
+.lead-fields input::placeholder { color:#68766f; }
+.lead-fields input:focus { border-color:#137a57; outline:3px solid rgba(19,122,87,.2); }
 .lead-helper,.lead-error { font-size:.72rem; margin:9px 0 0; }
 .lead-helper { color:#56645d; }
 .lead-helper a { text-decoration:underline; }
@@ -921,8 +921,7 @@ body { background:var(--ink); color:#dce7e1; }
   .report-offer-bridge { padding:58px 4px 26px; }
   .lead-capture { gap:16px; grid-template-columns:42px 1fr; padding:24px 18px; }
   .lead-capture-icon { height:42px; width:42px; }
-  .lead-field-row { grid-template-columns:1fr; }
-  .lead-field-row .button { width:100%; }
+  .lead-fields .button { width:100%; }
   .lead-success .button { font-size:.68rem; width:100%; }
   .offer-hero-v3,.offer-problem-v3,.offer-solution-v3,.practical-benefits-v3,.social-proof-section,.pricing-v3,.faq-v3 { padding:72px 20px; }
   .offer-hero-v3 { gap:48px; padding-top:52px; }

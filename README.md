@@ -6,7 +6,7 @@ Funil do **Protocolo da Evolução**: introdução, quiz de 9 perguntas, duas pa
 
 - Next.js App Router via vinext, React 19 e TypeScript estrito
 - Tailwind CSS 4 para pipeline de estilos; design próprio em `app/globals.css`
-- Sessão local versionada e captura opcional de e-mail em Cloudflare D1
+- Sessão local versionada e captura opcional de nome e e-mail no Supabase
 - Analytics desacoplado, compatível com `dataLayer` e Meta Pixel quando presentes
 - Vitest para domínio e Node Test para renderização do build
 - Build ESM compatível com Cloudflare Workers/Sites
@@ -56,6 +56,8 @@ Copie `.env.example` para `.env.local`. Nenhum segredo deve usar prefixo `NEXT_P
 
 - `NEXT_PUBLIC_SITE_URL`: URL canônica do site
 - `LANDING_PAGE_URL`: URL completa da landing externa aberta após o diagnóstico
+- `SUPABASE_URL`: URL do projeto Supabase usado pelo CRM
+- `SUPABASE_PUBLISHABLE_KEY`: chave publicável usada somente pela API do quiz para inserir leads
 - `NEXT_PUBLIC_GA_ID`, `NEXT_PUBLIC_META_PIXEL_ID`: identificadores opcionais de analytics
 - `NEXT_PUBLIC_PRIVACY_URL`, `NEXT_PUBLIC_TERMS_URL`, `NEXT_PUBLIC_CONTACT_URL`: destinos legais reais
 
@@ -70,7 +72,7 @@ A imagem social do diagnóstico fica em `public/og.png`.
 
 ## Sessão e privacidade
 
-A chave `protocolo-evolucao:session:v3` armazena respostas, etapa, resultado, horário aproximado e UTMs no dispositivo. O e-mail só é enviado ao D1 quando a pessoa escolhe salvar o diagnóstico; as respostas completas não são enviadas. Para limpar manualmente:
+A chave `protocolo-evolucao:session:v3` armazena respostas, etapa, resultado, horário aproximado e UTMs no dispositivo. O nome e o e-mail só são enviados ao Supabase quando a pessoa escolhe salvar o diagnóstico; as respostas completas não são enviadas. Para limpar manualmente:
 
 ```js
 localStorage.removeItem("protocolo-evolucao:session:v3")

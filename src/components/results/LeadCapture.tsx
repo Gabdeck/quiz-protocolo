@@ -8,6 +8,7 @@ import { track } from "@/src/lib/analytics";
 import { buildLandingRedirectPath } from "@/src/lib/validation/landing";
 
 export function LeadCapture({ session }: { session: QuizSession }) {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [company, setCompany] = useState("");
   const [status, setStatus] = useState<"idle" | "saving" | "saved" | "skipped" | "error">("idle");
@@ -28,6 +29,7 @@ export function LeadCapture({ session }: { session: QuizSession }) {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
+          name,
           email,
           company,
           primaryBlocker: result.primaryBlocker,
@@ -61,9 +63,9 @@ export function LeadCapture({ session }: { session: QuizSession }) {
         <p>Registramos seu resultado para que a recomendação continue conectada ao padrão que você acabou de identificar.</p>
       </div>
       <form onSubmit={submit} noValidate>
-        <label htmlFor="lead-email">Seu melhor e-mail</label>
-        <div className="lead-field-row">
-          <input id="lead-email" name="email" type="email" autoComplete="email" required value={email} onChange={(event) => setEmail(event.target.value)} aria-describedby="lead-helper lead-error" placeholder="voce@exemplo.com" />
+        <div className="lead-fields">
+          <div><label htmlFor="lead-name">Seu nome</label><input id="lead-name" name="name" type="text" autoComplete="name" required minLength={2} maxLength={120} value={name} onChange={(event) => setName(event.target.value)} placeholder="Como podemos chamar você?" /></div>
+          <div><label htmlFor="lead-email">Seu melhor e-mail</label><input id="lead-email" name="email" type="email" autoComplete="email" required value={email} onChange={(event) => setEmail(event.target.value)} aria-describedby="lead-helper lead-error" placeholder="voce@exemplo.com" /></div>
           <button className="button primary" type="submit" disabled={status === "saving"}>{status === "saving" ? "SALVANDO..." : "SALVAR MEU DIAGNÓSTICO"}</button>
         </div>
         <div className="lead-honeypot" aria-hidden><label htmlFor="company">Empresa</label><input id="company" name="company" tabIndex={-1} autoComplete="off" value={company} onChange={(event) => setCompany(event.target.value)} /></div>

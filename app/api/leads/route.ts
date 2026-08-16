@@ -1,7 +1,5 @@
-import { sql } from "drizzle-orm";
-import { getDb } from "@/db";
-import { leads } from "@/db/schema";
 import type { DiagnosticPillar, ResistanceBand, Subpattern, UtmData } from "@/src/domain/quiz/types";
+import { getSupabaseLeadClient } from "@/src/lib/supabase/server";
 
 const pillars: DiagnosticPillar[] = ["organization", "execution", "discipline"];
 const resistanceBands: ResistanceBand[] = ["low", "moderate", "high", "very_high"];
@@ -9,6 +7,7 @@ const subpatterns: Subpattern[] = ["dispersion", "urgency_reactivity", "unclear_
 const allowedTracking = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "ref", "manychat"];
 
 type LeadPayload = {
+  name?: string;
   email?: string;
   company?: string;
   primaryBlocker?: DiagnosticPillar;
@@ -36,6 +35,11 @@ export async function POST(request: Request) {
     const payload = (await request.json()) as LeadPayload;
     if (payload.company) return Response.json({ ok: true }, { status: 201 });
 
+    const name = payload.name?.trim().replace(/\s+/g, " ") ?? "";
+    if (name.length < 2 || name.length > 120) {
+      return Response.json({ error: "Informe seu nome." }, { status: 400 });
+    }
+
     const email = payload.email?.trim().toLowerCase() ?? "";
     if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return Response.json({ error: "Informe um e-mail válido." }, { status: 400 });
@@ -51,37 +55,29 @@ export async function POST(request: Request) {
     }
 
     const values = {
-      id: crypto.randomUUID(),
+      name,
       email,
-      primaryBlocker: payload.primaryBlocker,
-      secondaryBlocker: payload.secondaryBlocker,
-      primarySubpattern: payload.primarySubpattern ?? null,
-      resistanceBand: payload.resistanceBand,
-      utmsJson: JSON.stringify(normalizeTracking(payload.utms)),
+      primary_blocker: payload.primaryBlocker,
+      secondary_blocker: payload.secondaryBlocker,
+      primary_subpattern: payload.primarySubpattern ?? null,
+      resistance_band: payload.resistanceBand,
+      utms: normalizeTracking(payload.utms),
       source: payload.source?.slice(0, 500),
-      funnelVersion: 3,
-      quizVersion: 3,
-      consentVersion: "lead-save-v1",
+      funnel_version: 3,
+      quiz_version: 3,
+      consent_version: "lead-save-v1",
     };
 
-    const db = await getDb();
-    await db.insert(leads).values(values).onConflictDoUpdate({
-      target: leads.email,
-      set: {
-        primaryBlocker: values.primaryBlocker,
-        secondaryBlocker: values.secondaryBlocker,
-        primarySubpattern: values.primarySubpattern,
-        resistanceBand: values.resistanceBand,
-        utmsJson: values.utmsJson,
-        source: values.source,
-        funnelVersion: values.funnelVersion,
-        quizVersion: values.quizVersion,
-        consentVersion: values.consentVersion,
-        updatedAt: sql`CURRENT_TIMESTAMP`,
-      },
-    });
+    const { error } = await getSupabaseLeadClient()
+      .from("leads")
+      .insert(values);
+    if (error && error.code !== "23505") {
+      console.error("Supabase lead insert failed", { code: error.code, message: error.message });
+      throw new Error("Supabase lead insert failed");
+    }
     return Response.json({ ok: true }, { status: 201 });
-  } catch {
+  } catch (error) {
+    console.error("Lead capture failed", error instanceof Error ? error.message : "Unknown error");
     return Response.json({ error: "Não foi possível salvar agora. Você ainda pode ver sua recomendação." }, { status: 500 });
   }
 }
